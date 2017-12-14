@@ -1,0 +1,45 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww25400\viewh14500\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 DAP MAST:R\
+\
+\
+Final structure : dataframe with one row per sequence. Columns contain: \
+- file from which the sequence is from\
+- sequence n\'b0 within the file\
+- GC %\
+- number of dinucleotides / sequence length\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 - number of trinucleotides / sequence length\
+- number of dinucleotides (with overlap) / sequence length\
+- number of trinucleotides (with overlap) / sequence length\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+1.Reading and storing fasta files  using R package 
+\fs26 \expnd0\expndtw0\kerning0
+\{seqinr\}. Use read.fasta() to store fasta files in SeqFastadna objects.\
+\
+documentation : http://seqinr.r-forge.r-project.org/seqinr_2_0-7.pdf\
+\
+use summary to extract GC content. \
+\
+2. Di/tri nucleotide search.\
+\
+transform the sequence from a list of character to a string (using paste0)\
+use regular expression to find GC di/tri nucleotides in sequences\
+\
+without overlap : \
+
+\fs24 \kerning1\expnd0\expndtw0 \
+length(gregexpr("[GCgc]\{2\}", sequence , perl = TRUE)[[1]])\
+\
+with overlap : \
+\
+length(gregexpr("(?=[GCgc]\{2\})", sequence , perl = TRUE)[[1]])\
+\
+\
+3. Create dataframe, plots etc. \
+}
