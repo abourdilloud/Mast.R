@@ -5,9 +5,9 @@ This project is to analyse fasta sequences and do some stats on GC content and s
 
 Functions : 
 
-1. Main function that reads a list of fasta files and creates a dataframe with basic info (file name, sequence identifier, sequence length). By default it will also include the GC content, and GC dinucleotide number and position per sequence.
-To do : 
-- transform the existing function to read multiple fasta files (instead of one at a time)
+1. fasta_stat() : main function, takes a list of fasta files (or a path to a directory containing fasta files) and returns a dataframe with stats (by default the data frame is the one returned by fasta_to_gc)
+
+2. fasta_to_gc() : reads fasta file, creates a dataframe with basic info (sequence identifier, gc content, sequence length) and the number of dinucleotides per sequence (by default without overlap)
 
 2. find_gc() : A function that finds GC dinucleotides (diNT) and return their number and position in the sequence. 
 
