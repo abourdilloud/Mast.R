@@ -41,4 +41,15 @@ df <- fasta_to_gc(file, overlap=TRUE)
 
 
 
-
+fasta_to_gc <- function(path, overlap=FALSE){
+  
+  if(!file.exists(path)){
+    return(paste(path,": no such file or directory"))
+  }
+  
+  else{
+    files <- list.files(path, pattern=".fasta")
+    return(files)
+    
+  }
+}
