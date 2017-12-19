@@ -17,13 +17,7 @@ fasta_to_gc <- function(fasta, overlap=FALSE){
   }
   
   df <- data.frame(sequence, length, gc.content)
-  if (!overlap){
-    df$nb.dinucleotides <- find_gc(fasta_file)
-  }
-  else if(overlap){
-    df$nb.dinucleotides <- find_gc(fasta_file,TRUE)
-  }
-  
+
   return(df)
 }
 
