@@ -2,9 +2,12 @@ source("fasta_to_gc.R")
 source("motif_finding.R")
 
 
-fasta_stat <- function(path, file.list){
+fasta_stat <- function(path, file.list, overlap=FALSE){
   
   tables <- list()
+  files <- list()
+  fasta <- list()
+  name <- c()
   
   if(missing(path) & missing(file.list)){
     stop("no file or directory specified")
@@ -20,11 +23,8 @@ fasta_stat <- function(path, file.list){
     }
     else{
       files <- list.files(path, pattern = ".fasta", full.names = T)
-      for(i in 1:length(files)){
-        tables[[i]] <- fasta_to_gc(files[[i]])
       }
     }
-  }
   
   if(!missing(file.list) & missing(path)){
     
@@ -33,11 +33,20 @@ fasta_stat <- function(path, file.list){
         stop(paste(file.list[i],": no such file or directory"))
       }
       else{
-        tables[[i]] <- fasta_to_gc(file.list[[i]])
+        files[[i]] <- file.list[i]
       }
     }
   }
   
-  table <- do.call("rbind",tables)
-  return(table)
+  for (i in 1:length(files)){
+    fasta[[i]] <- read.fasta(files[[i]])
+    name[i] <- basename(files[[i]])
+    tables[[i]] <- fasta_to_gc(fasta[[i]],overlap)
+    file <- c(rep(name[i], nrow(tables[[i]])))
+    tables[[i]] <- cbind(file,tables[[i]])
+  }
+  
+  df <- do.call("rbind", tables)
+  return(df)
+  
 }

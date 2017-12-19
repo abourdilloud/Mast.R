@@ -2,20 +2,51 @@ library(seqinr)
 
 ##reads fasta file and returns nb of dinucleotides (default without overlap)
 
-find_gc <- function(fasta_file, overlap=FALSE){
-  fasta <- read.fasta(fasta_file,as.string = T)
+find_gc <- function(fasta, overlap=FALSE){
+  
   nb.gc <- c()
   
-  if(overlap==FALSE){
-    for (i in 1:length(fasta)){
-      nb.gc[i] <- length(gregexpr("[GCgc]{2}", fasta[[i]] , perl = TRUE)[[1]])
+  for (i in 1:length(fasta)){
+    
+    sequence <- paste(fasta[[i]],collapse = "")
+    
+    if (!overlap){
+      nb.gc[i] <- length(gregexpr("[GCgc]{2}", sequence , perl = TRUE)[[1]])
+    }
+    
+    else if(overlap){
+      nb.gc[i] <- length(gregexpr("(?=[GCgc]{2})", sequence , perl = TRUE)[[1]])
     }
   }
-  else{
-    for (i in 1:length(fasta)){
-      nb.gc[i] <- length(gregexpr("(?=[GCgc]{2})", fasta[[i]] , perl = TRUE)[[1]])
-    }
-  }
+  
   return(nb.gc)
+}
+
+find_separate_gc <- function(fasta, overlap=FALSE){
+  nb.GG <- c()
+  nb.GC <- c()
+  nb.CC <- c()
+  nb.CG <- c()
+  
+  for (i in 1:length(fasta)){
+    sequence <- paste(fasta[[i]],collapse = "")
+    
+    if(!overlap){
+      nb.GG[i] <- length(gregexpr("GG", sequence , perl = T, ignore.case = T)[[1]])
+      nb.GC[i] <- length(gregexpr("GC", sequence , perl = T, ignore.case = T)[[1]])
+      nb.CC[i] <- length(gregexpr("CC", sequence , perl = T, ignore.case = T)[[1]])
+      nb.CG[i] <- length(gregexpr("CG", sequence , perl = T, ignore.case = T)[[1]])
+    }
+    
+    else if(overlap){
+      nb.GG[i] <- length(gregexpr("(?=(GG))", sequence , perl = T, ignore.case = T)[[1]])
+      nb.GC[i] <- length(gregexpr("(?=(GC))", sequence , perl = T, ignore.case = T)[[1]])
+      nb.CC[i] <- length(gregexpr("(?=(CC))", sequence , perl = T, ignore.case = T)[[1]])
+      nb.CG[i] <- length(gregexpr("(?=(CG))", sequence , perl = T, ignore.case = T)[[1]])
+    }
+  }
+  
+  nb <- data.frame(nb.GG, nb.GC, nb.CC, nb.CG)
+  return(nb)
 }
 
