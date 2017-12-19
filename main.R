@@ -2,7 +2,7 @@ source("fasta_to_gc.R")
 source("motif_finding.R")
 
 
-fasta_stat <- function(path, file.list, overlap=FALSE){
+fasta_stat <- function(path, file.list, n = 2, overlap = FALSE, separate = FALSE){
   
   tables <- list()
   files <- list()
@@ -44,6 +44,16 @@ fasta_stat <- function(path, file.list, overlap=FALSE){
     tables[[i]] <- fasta_to_gc(fasta[[i]],overlap)
     file <- c(rep(name[i], nrow(tables[[i]])))
     tables[[i]] <- cbind(file,tables[[i]])
+    
+    if(!separate){
+      nb.dinucleotides <- find_gc(fasta[[i]],n, overlap)
+    }
+    
+    else if(separate){
+      nb.dinucleotides <- find_separate_gc(fasta[[i]],n, overlap)
+    }
+   
+    tables[[i]] <- cbind(tables[[i]],nb.dinucleotides)
   }
   
   df <- do.call("rbind", tables)
