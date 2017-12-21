@@ -1,23 +1,36 @@
 library(seqinr)
 source("motif_finding.R")
 
-# reads fasta file, creates a dataframe with basic info (sequence identifier, gc content, 
-# sequence length) and the number of dinucleotides per sequence (by default without overlap)
+# creates a dataframe with basic info (sequence identifier, gc content, 
+# sequence length) 
 
-fasta_to_gc <- function(fasta, overlap=FALSE){
+
+seq_to_table <- function(seq_object, method = c("GC","pattern"), pattern,
+                        overlap=FALSE, separate=FALSE, n=2){
+  tables <- list()
   
-  sequence <- c()
-  gc.content <- c()
-  length <- c()
-
-  for(i in (1:length(fasta))){
-    sequence[i] <- attr(fasta[[i]],"name")
-    gc.content[i] <- summary(fasta[[i]])$GC
-    length[i] <- length(fasta[[i]])
+  for (i in (1:length(seq_object))){
+    seq.ID <- attr(seq_object[[i]],"name")
+    gc.content <- summary(seq_object[[i]])$GC
+    length <- length(seq_object[[i]])
+    seq.as.string <- paste(seq_object[[i]], collapse = "")
+    
+    tables[[i]] <- data.frame(seq.ID, length, gc.content)
+    
+    if (missing(method)||method=="gc.content"){
+      tables[[i]] <- tables[[i]]
+    }
+    else if(method=="GC" && !separate){
+      tables[[i]] <- cbind(tables[[i]],find_gc(seq.as.string, n, overlap))
+    }
+    else if(method=="GC" && separate){
+      tables[[i]] <- cbind(tables[[i]], find_separate_gc(seq.as.string, n, overlap))
+    }
+    # else if(method=="pattern" && !missing(pattern)){
+    #   tables[[i]] <- cbind(tables[[i]], find_motif(pattern, seq.as.string, overlap))
+    # }
   }
+  df <- do.call("rbind", tables)
   
-  df <- data.frame(sequence, length, gc.content)
-
   return(df)
 }
-
