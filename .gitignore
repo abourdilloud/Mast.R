@@ -6,4 +6,5 @@ mast.R
 .DS_Store
 MastR.pdf
 MastR.Rmd
+motif_finding.R
 data
