@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 mast.R
+.DS_Store
+MastR.pdf
+MastR.Rmd
 data
