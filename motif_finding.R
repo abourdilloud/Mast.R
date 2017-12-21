@@ -70,8 +70,41 @@ find_separate_gc <- function(fasta, n=2, overlap=FALSE){
   
 }
 
+# Search for a specific motif in a sequence and output the number of occurences.
 
-
-
-
-
+find_motif <- function(motif, dna_seq, overlap = TRUE){
+  
+  occ_count <- 0
+  mean_space <- 0
+  
+  if (overlap == TRUE) {
+    
+    mot_string <- paste('(?=(', motif, '))', sep = '')
+    
+  } else if (overlap == FALSE) {
+    
+    mot_string <- paste('(', motif, ')', sep = '')
+    
+  }
+  
+  mot_match <- gregexpr(mot_string, dna_seq, perl = TRUE)
+  
+  if (mot_match[[1]][1] != -1) {
+    
+    occ_count <- length(mot_match[[1]])
+    
+    if (length(mot_match[[1]]) > 1){
+      
+      for (i in seq(length(mot_match[[1]])-1)){
+        
+        mean_space <- mean_space + (as.vector(mot_match[[1]])[i+1] - as.vector(mot_match[[1]])[i] - nchar(motif))
+        
+      }
+      
+      mean_space <- mean_space/(length(mot_match[[1]])-1)
+      
+    }
+  }
+  
+  return(c(occ_count, round(mean_space, 3)))
+}
