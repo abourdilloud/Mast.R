@@ -1,6 +1,11 @@
 source("fasta_to_gc.R")
 source("motif_finding.R")
+library(seqinr)
 
+# Reads fasta files from  a path containing fasta files (path) or a list of paths (file.list)
+# returns a data frame containing : original file, sequence ID, sequence length, gc content,
+# number of G/C repeats (of length n). By default G/C repeats are searched without overlap and
+# not separately.
 
 fasta_stat <- function(path, file.list, n = 2, overlap = FALSE, separate = FALSE){
   
